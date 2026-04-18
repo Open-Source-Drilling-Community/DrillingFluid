@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
   <div hidden="@(!ShowEditPanel || (drillingFluidDescriptionInstance == null))">
@@ -95,8 +96,8 @@
         </MudPaper>
     </MudPaper>
 </div>
-<BrineAdd ShowAddPanel="@showBrineAddPanel" OnMessageSent="@UpdatedBrineListAsync"/>
-<BaseOilAdd ShowAddPanel="@showBaseOilAddPanel" OnMessageSent="@UpdatedBaseOilListAsync"/>
+<BrineAddAndEdit BrineId="null" OnMessageSent="@UpdatedBrineListAsync"/>
+<BaseOilAddAndEdit BaseOilId="null" OnMessageSent="@UpdatedBaseOilListAsync"/>
 
 @code{
     [CascadingParameter]
@@ -132,8 +133,8 @@
     private FlowCurve flowCurve = PseudoConstructors.ConstructFlowCurve();
     private async Task UpdatedBrineListAsync()
     {
-        logger.LogInformation("Trying to load list of Brine from client: " + APIUtils.HttpClientDrillingFluid);
-        var brineTask = APIUtils.ClientDrillingFluid.GetAllBrineAsync();        
+        logger.LogInformation("Trying to load list of Brine from client: " + Api.HttpClientDrillingFluid);
+        var brineTask = Api.ClientDrillingFluid.GetAllBrineAsync();        
         List<Task> loadingTaskList = new List<Task> { brineTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
         if (finishedTask == brineTask)
@@ -161,8 +162,8 @@
     {
         //Load available base oil data
         // Starting all loading tasks asynchronously
-        logger.LogInformation("Trying to load list of BaseOil from client: " + APIUtils.HttpClientDrillingFluid);
-        var baseOilTask = APIUtils.ClientDrillingFluid.GetAllBaseOilAsync();        
+        logger.LogInformation("Trying to load list of BaseOil from client: " + Api.HttpClientDrillingFluid);
+        var baseOilTask = Api.ClientDrillingFluid.GetAllBaseOilAsync();        
         List<Task> loadingTaskList = new List<Task> { baseOilTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
         if (finishedTask == baseOilTask)
@@ -213,7 +214,7 @@
             try
             {                
                 drillingFluidDescriptionInstance = (DrillingFluidDescription) 
-                    await APIUtils.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId);
+                    await Api.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId);
                 UpdateVariablesFromGetInformation();
             }
             catch (Exception ex)
@@ -233,7 +234,7 @@
             try
             {
                 drillingFluidDescriptionInstance = (DrillingFluidDescription) 
-                    await APIUtils.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId);                
+                    await Api.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId);                
                 UpdateVariablesFromGetInformation();
             }
             catch (Exception ex)
@@ -272,7 +273,7 @@
             drillingFluidDescriptionInstance.FlowCurve = flowCurve;
             drillingFluidDescriptionInstance.DrillingFluidComposition = currentComposition;
             
-            await APIUtils.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
+            await Api.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
             logger.LogInformation("Drilling fluid description posted successfully");
             Snackbar.Add("Drilling fluid description posted successfully", Severity.Success);            
             //Force panels to be hidden
@@ -303,7 +304,7 @@
             drillingFluidDescriptionInstance.DrillingFluidComposition = currentComposition;
             if (DrillStringDescriptionId != null)
             {
-                await APIUtils.ClientDrillingFluid.PutDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId, drillingFluidDescriptionInstance);            
+                await Api.ClientDrillingFluid.PutDrillingFluidDescriptionByIdAsync((Guid)DrillStringDescriptionId, drillingFluidDescriptionInstance);            
             }
             else
             {

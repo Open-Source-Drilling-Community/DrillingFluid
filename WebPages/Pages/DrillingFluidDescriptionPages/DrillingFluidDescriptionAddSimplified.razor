@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
   <div hidden="@(!ShowAddPanel)">
@@ -101,7 +102,7 @@
             drillingFluidDescriptionInstance.GellingProperties = gellingProperties;
             drillingFluidDescriptionInstance.FlowCurve = flowCurve;
             drillingFluidDescriptionInstance.DrillingFluidComposition = currentComposition;
-            await APIUtils.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
+            await Api.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
             logger.LogInformation("Fluid description posted successfully");
             Snackbar.Add("Fluid description posted successfully", Severity.Success);            
             await SendMessage();

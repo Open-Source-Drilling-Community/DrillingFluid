@@ -1,9 +1,10 @@
-﻿@page "/DrillingFluidOrder"
+@inject IDrillingFluidAPIUtils Api
+@page "/DrillingFluidOrder"
 @inject ILogger<DrillingFluidMain> logger
 @inject ISnackbar Snackbar
 
-<MudUnitAndReferenceChoiceTag HttpHost=@APIUtils.HostNameUnitConversion
-                              HttpBasePath=@APIUtils.HostBasePathUnitConversion
+<MudUnitAndReferenceChoiceTag HttpHost=@Api.HostNameUnitConversion
+                              HttpBasePath=@Api.HostBasePathUnitConversion
                               HttpController="UnitSystem/"
                               UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
                               UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
@@ -59,7 +60,7 @@
     private List<DrillingFluidOrder> drillingFluidOrderList = new();
     private List<DrillingFluidOrder> selectedDrillingFluidOrderList = new();
     private DrillingFluidOrder? currentDrillingFluidOrder;
-    private List<object?>? inputDataList = new(); // container used to pass input data to the DrillingFluidOrderEdit razor component without specifying content types (required by µservice Template)
+    private List<object?>? inputDataList = new(); // container used to pass input data to the DrillingFluidOrderEdit razor component without specifying content types (required by �service Template)
                                                   // DrillingFluidOrderDescription related variables
     // UI related variables
     public bool isHiddenMainPanel;
@@ -82,8 +83,8 @@
             currentDrillingFluidOrder = null;
 
             // Starting all loading tasks asynchronously
-            logger.LogInformation("Trying to load list of DrillingFluidOrder from client: " + APIUtils.HostNameDrillingFluid);
-            var drillingFluidOrderTask = APIUtils.ClientDrillingFluid.GetAllDrillingFluidOrderAsync();
+            logger.LogInformation("Trying to load list of DrillingFluidOrder from client: " + Api.HostNameDrillingFluid);
+            var drillingFluidOrderTask = Api.ClientDrillingFluid.GetAllDrillingFluidOrderAsync();
 
             List<Task> loadingTaskList = new List<Task> { drillingFluidOrderTask };            
 
@@ -141,7 +142,7 @@
     {
         try
         {
-            currentDrillingFluidOrder = await APIUtils.ClientDrillingFluid.GetDrillingFluidOrderByIdAsync(id);
+            currentDrillingFluidOrder = await Api.ClientDrillingFluid.GetDrillingFluidOrderByIdAsync(id);
             if (currentDrillingFluidOrder != null)
             {
                 isHiddenMainPanel = true;
@@ -170,7 +171,7 @@
         {
             try
             {
-                await APIUtils.ClientDrillingFluid.DeleteDrillingFluidOrderByIdAsync(id);
+                await Api.ClientDrillingFluid.DeleteDrillingFluidOrderByIdAsync(id);
                 await OnInitializedAsync();
             }
             catch (Exception ex)
@@ -187,7 +188,7 @@
             {
                 foreach (DrillingFluidOrder drillingFluidOrder in selectedDrillingFluidOrderList)
                 {
-                    await APIUtils.ClientDrillingFluid.DeleteDrillingFluidOrderByIdAsync(drillingFluidOrder.MetaInfo.ID);
+                    await Api.ClientDrillingFluid.DeleteDrillingFluidOrderByIdAsync(drillingFluidOrder.MetaInfo.ID);
                 }
                 await OnInitializedAsync();
             }
@@ -260,3 +261,4 @@
         await OnInitializedAsync();
     }
 }
+

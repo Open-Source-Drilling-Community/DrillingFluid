@@ -1,3 +1,4 @@
+namespace NORCE.Drilling.DrillingFluid.WebPages.Shared;
 
 public static class LSQM
 {
@@ -40,17 +41,12 @@ public static class LSQM
         {
             double[] coefficients = new double[2];
             coefficients[0] = (Y[1] - Y[0]) / (X[1] - X[0]);
-            coefficients[1] = Y[1] - coefficients[0] * X[1];
+            coefficients[1] = Y[0] - coefficients[0] * X[0];
             return coefficients;
         }
         else
         {
             return new double[2];
         }
-
-
     }
-
-
-
 }

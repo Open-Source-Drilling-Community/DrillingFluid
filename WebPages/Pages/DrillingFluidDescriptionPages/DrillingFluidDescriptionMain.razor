@@ -1,9 +1,10 @@
+@inject IDrillingFluidAPIUtils Api
 @page "/DrillingFluidDescription"
 @inject ILogger<DrillingFluidMain> logger
 @inject ISnackbar Snackbar
 
-<MudUnitAndReferenceChoiceTag HttpHost=@APIUtils.HostNameUnitConversion
-        HttpBasePath=@APIUtils.HostBasePathUnitConversion
+<MudUnitAndReferenceChoiceTag HttpHost=@Api.HostNameUnitConversion
+        HttpBasePath=@Api.HostBasePathUnitConversion
         HttpController="UnitSystem/"
         UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
         UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
@@ -77,8 +78,8 @@
     {
 
         // Starting all loading tasks asynchronously
-        logger.LogInformation("Trying to load list of DrillingFluidDescription from client: " + APIUtils.HttpClientDrillingFluid);
-        var drillingFluidDescriptionTask = APIUtils.ClientDrillingFluid.GetAllDrillingFluidDescriptionAsync();
+        logger.LogInformation("Trying to load list of DrillingFluidDescription from client: " + Api.HttpClientDrillingFluid);
+        var drillingFluidDescriptionTask = Api.ClientDrillingFluid.GetAllDrillingFluidDescriptionAsync();
         
         List<Task> loadingTaskList = new List<Task> { drillingFluidDescriptionTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
@@ -148,7 +149,7 @@
         {
             if (await ConfirmDeletion())
             {
-                await APIUtils.ClientDrillingFluid.DeleteDrillingFluidDescriptionByIdAsync(id);
+                await Api.ClientDrillingFluid.DeleteDrillingFluidDescriptionByIdAsync(id);
                 await OnInitializedAsync();
             }
         }
@@ -163,7 +164,7 @@
         {
             foreach (DrillingFluidDescription fluidDescription in selectedDrillingFluidDescriptionList)
             {
-                await APIUtils.ClientDrillingFluid.DeleteDrillingFluidDescriptionByIdAsync(fluidDescription.MetaInfo.ID);
+                await Api.ClientDrillingFluid.DeleteDrillingFluidDescriptionByIdAsync(fluidDescription.MetaInfo.ID);
                 await OnInitializedAsync();
             }
             selectedDrillingFluidDescriptionList.Clear();

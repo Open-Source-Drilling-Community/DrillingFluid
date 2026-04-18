@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
 <MudPaper Elevation="1" Class="py-6" Style="@($"position: {DataUtils.FLOATING_POSITION}; background:{DataUtils.FLOATING_COLOUR};")" >              
@@ -136,8 +137,8 @@
     private async Task UpdatedBrineListAsync()
     {
         showBrineAddPanel = false;
-        logger.LogInformation("Trying to load list of Brine from client: " + APIUtils.HttpClientDrillingFluid);
-        var brineTask = APIUtils.ClientDrillingFluid.GetAllBrineAsync();        
+        logger.LogInformation("Trying to load list of Brine from client: " + Api.HttpClientDrillingFluid);
+        var brineTask = Api.ClientDrillingFluid.GetAllBrineAsync();        
         List<Task> loadingTaskList = new List<Task> { brineTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
         if (finishedTask == brineTask)
@@ -166,8 +167,8 @@
         showBaseOilAddPanel = false;
         //Load available base oil data
         // Starting all loading tasks asynchronously
-        logger.LogInformation("Trying to load list of BaseOil from client: " + APIUtils.HttpClientDrillingFluid);
-        var baseOilTask = APIUtils.ClientDrillingFluid.GetAllBaseOilAsync();        
+        logger.LogInformation("Trying to load list of BaseOil from client: " + Api.HttpClientDrillingFluid);
+        var baseOilTask = Api.ClientDrillingFluid.GetAllBaseOilAsync();        
         List<Task> loadingTaskList = new List<Task> { baseOilTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
         if (finishedTask == baseOilTask)
@@ -204,7 +205,7 @@
         {
             try
             {
-                drillingFluidDescriptionInstance = await APIUtils.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)FluidDescriptionId);
+                drillingFluidDescriptionInstance = await Api.ClientDrillingFluid.GetDrillingFluidDescriptionByIdAsync((Guid)FluidDescriptionId);
                 if (drillingFluidDescriptionInstance != null)
                 {
                     currentComposition = drillingFluidDescriptionInstance.DrillingFluidComposition;
@@ -254,7 +255,7 @@
             drillingFluidDescriptionInstance.FlowCurve = flowCurve;
             drillingFluidDescriptionInstance.DrillingFluidComposition = currentComposition;
             
-            await APIUtils.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
+            await Api.ClientDrillingFluid.PostDrillingFluidDescriptionAsync(drillingFluidDescriptionInstance);
             logger.LogInformation("Fluid description posted successfully");
             Snackbar.Add("Fluid description posted successfully", Severity.Success);            
             showBaseOilAddPanel = false;
@@ -281,7 +282,7 @@
             drillingFluidDescriptionInstance.FlowCurve = flowCurve;
             drillingFluidDescriptionInstance.DrillingFluidComposition = currentComposition;
             
-            await APIUtils.ClientDrillingFluid.PutDrillingFluidDescriptionByIdAsync(drillingFluidDescriptionInstance.MetaInfo.ID, drillingFluidDescriptionInstance);
+            await Api.ClientDrillingFluid.PutDrillingFluidDescriptionByIdAsync(drillingFluidDescriptionInstance.MetaInfo.ID, drillingFluidDescriptionInstance);
             logger.LogInformation("Fluid description updated successfully");
             Snackbar.Add("Fluid description updated successfully", Severity.Success);            
             showBaseOilAddPanel = false;

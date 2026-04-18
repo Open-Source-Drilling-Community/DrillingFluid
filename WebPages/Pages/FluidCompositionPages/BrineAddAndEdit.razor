@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
 <MudPaper Elevation="2" Class="py-6" Style="@($"position: {DataUtils.FLOATING_POSITION}; background:{DataUtils.FLOATING_COLOUR_DEEP};")" >            
@@ -293,7 +294,7 @@
     {
         if (BrineId != null)
         {
-            brineInstance = await APIUtils.ClientDrillingFluid.GetBrineByIdAsync((Guid)BrineId);
+            brineInstance = await Api.ClientDrillingFluid.GetBrineByIdAsync((Guid)BrineId);
         }
     }
     private async Task AddBrineComponent()
@@ -313,7 +314,7 @@
                 brineInstance.PVTParameters = null;
             }                                                 
             brineInstance.MetaInfo = new MetaInfo{ID = Guid.NewGuid()};            
-            await APIUtils.ClientDrillingFluid.PostBrineAsync(brineInstance);
+            await Api.ClientDrillingFluid.PostBrineAsync(brineInstance);
             logger.LogInformation("Brine component posted successfully");
             Snackbar.Add("Brine component posted successfully", Severity.Success);            
             await SendMessage();
@@ -340,7 +341,7 @@
                 brineInstance.SaltContent = saltContents;
                 brineInstance.PVTParameters = null;
             }                                                 
-            await APIUtils.ClientDrillingFluid.PutBrineByIdAsync(brineInstance.MetaInfo.ID, brineInstance);
+            await Api.ClientDrillingFluid.PutBrineByIdAsync(brineInstance.MetaInfo.ID, brineInstance);
             logger.LogInformation("Brine component posted successfully");
             Snackbar.Add("Brine component posted successfully", Severity.Success);            
             await SendMessage();

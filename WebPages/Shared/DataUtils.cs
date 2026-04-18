@@ -1,6 +1,7 @@
-﻿public static class DataUtils
+namespace NORCE.Drilling.DrillingFluid.WebPages.Shared;
+
+public static class DataUtils
 {
-    // default values
     public const double DEFAULT_VALUE = 999.25;
     public static string DEFAULT_NAME_DrillingFluid = "Default DrillingFluid Name";
     public static string DEFAULT_DESCR_DrillingFluid = "Default DrillingFluid Description";
@@ -10,7 +11,6 @@
     public static string FLOATING_COLOUR_DEEP = "rgba(47, 29, 148, 0.86)";
     public static string FLOATING_POSITION = "absolute; top: 45%; left: 20%; width: 75%";
 
-    // unit management
     public static class UnitAndReferenceParameters
     {
         public static string? UnitSystemName { get; set; } = "Metric";
@@ -23,10 +23,9 @@
 
     public static void UpdateUnitSystemName(string val)
     {
-        UnitAndReferenceParameters.UnitSystemName = (string)val;
+        UnitAndReferenceParameters.UnitSystemName = val;
     }
 
-    // units and labels
     public static readonly string DrillingFluidMyBaseDataListLabel = "MyBaseDataList";
     public static readonly string DrillingFluidOutputParamLabel = "DrillingFluidOutputParam";
     public static readonly string DrillingFluidNameLabel = "DrillingFluid name";

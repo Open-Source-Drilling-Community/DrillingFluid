@@ -1,82 +1,79 @@
-@page "/BaseOil"
+@inject IDrillingFluidAPIUtils Api
+@page "/Brine"
 @inject ILogger<DrillingFluidMain> logger
 @inject ISnackbar Snackbar
-<MudUnitAndReferenceChoiceTag HttpHost=@APIUtils.HostNameUnitConversion
-        HttpBasePath=@APIUtils.HostBasePathUnitConversion
-        HttpController="UnitSystem/"
-        UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
-        UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
-    @if (baseOilList == null)
+<MudUnitAndReferenceChoiceTag HttpHost=@Api.HostNameUnitConversion
+                HttpBasePath=@Api.HostBasePathUnitConversion
+                HttpController="UnitSystem/"
+                UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
+                UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
+    @if (brineList == null)
     {
         <p><em>Loading...</em></p>
     }
     else
     {     
-
-        
         <MudToolBar>
-            <MudText Typo="Typo.h5"> Base Oil Description @baseOilMessage </MudText>
+            <MudText Typo="Typo.h5"> Brine Description @brineMessage </MudText>
             <MudSpacer/>
-            <MudButton StartIcon="@Icons.Material.Outlined.Delete" 
-                IconColor="@Color.Error" OnClick="@DeleteSelectedBaseOil">Delete selection</MudButton>     
-            <MudButton StartIcon="@Icons.Material.Outlined.Add"    
-                IconColor="@Color.Success" OnClick="@AddBaseOil">Add Base Oil element</MudButton>
-     
+            <MudButton StartIcon="@Icons.Material.Outlined.Delete" IconColor="@Color.Error" OnClick="@DeleteSelectedBrine">Delete selection</MudButton>       
+            <MudButton StartIcon="@Icons.Material.Outlined.Add" IconColor="@Color.Success" OnClick="@AddBrine">Add Brine element</MudButton>
         </MudToolBar>
-        <MudDataGrid T="BaseOil" MultiSelection="true" Items="@baseOilList" SelectedItemsChanged="@SelectedItemsChanged"
-                EditMode="DataGridEditMode.Cell"
+        <MudDataGrid T="Brine" MultiSelection="true" Items="@brineList" SelectedItemsChanged="@SelectedItemsChanged"
                 Hover="true"
-                SortMode="SortMode.Multiple" QuickFilter="@_baseOilFilter" Filterable="false">
+                SortMode="SortMode.Multiple" QuickFilter="@_brineFilter" Filterable="false">
             <Columns>
-                <SelectColumn T="BaseOil" />
+                <SelectColumn T="Brine" />
                 <PropertyColumn Property="x => x.Name" Title="Name" CellStyle="width: 20%;" Sortable="true" Editable="false" />
                 <PropertyColumn Property="x => x.Description" Title="Description" CellStyle="width: 60%;" Sortable="true" Editable="false" />         
                 <TemplateColumn>
                     <CellTemplate>
                         <MudIconButton Class="mx-2" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" 
-                            OnClick="(() => EditBaseOil(context.Item.MetaInfo.ID))" />                                                                                                             
+                            OnClick="(() => EditBrine(context.Item.MetaInfo.ID))" />        
                         <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" 
-                            OnClick="(() => DeleteBaseOil(context.Item.MetaInfo.ID))"/>                            
+                            OnClick="(() => DeleteBrine(context.Item.MetaInfo.ID))"/>
                     </CellTemplate>
                 </TemplateColumn>
             </Columns>
             <PagerContent>
-                <MudDataGridPager T="BaseOil" />
+                <MudDataGridPager T="Brine" />
             </PagerContent>
         </MudDataGrid>
     }
     @if(showAddPanel)
     {
-        <BaseOilAddAndEdit BaseOilId="@baseOilIdForEdit" OnMessageSent="@HandleBaseOilAddition"/>
+        <BrineAddAndEdit BrineId="@brineIdForEdit"  OnMessageSent="@HandleBrineAddition"/>
     }
+    
 </MudUnitAndReferenceChoiceTag>
 
 
+
 @code{
-    private List<BaseOil> baseOilList = new();
-    private List<BaseOil> selectedBaseOilList = new();
+    private List<Brine> brineList = new();
+    private List<Brine> selectedBrineList = new();
     [Inject] private IDialogService DialogService { get; set; }
-    private Guid? baseOilIdForEdit;
     private bool showAddPanel = false;
+     private Guid? brineIdForEdit;
     private string? _searchString;
-    private string baseOilMessage = "";
+    private string brineMessage = "";
     protected override async Task OnInitializedAsync()
     {
 
         // Starting all loading tasks asynchronously
-        logger.LogInformation("Trying to load list of BaseOil from client: " + APIUtils.HttpClientDrillingFluid);
-        var baseOilTask = APIUtils.ClientDrillingFluid.GetAllBaseOilAsync();
-
-        List<Task> loadingTaskList = new List<Task> { baseOilTask };
+        logger.LogInformation("Trying to load list of Brine from client: " + Api.HttpClientDrillingFluid);
+        var brineTask = Api.ClientDrillingFluid.GetAllBrineAsync();
+        
+        List<Task> loadingTaskList = new List<Task> { brineTask };
         Task finishedTask = await Task.WhenAny(loadingTaskList);
-        if (finishedTask == baseOilTask)
+        if (finishedTask == brineTask)
         {
             try
             {
-                baseOilList = (List<BaseOil>)await baseOilTask; // awaiting the finished task allows to retrieve its result and throw exception if needed
-                if (baseOilList != null)
+                brineList = (List<Brine>)await brineTask; // awaiting the finished task allows to retrieve its result and throw exception if needed
+                if (brineList != null)
                 {
-                    baseOilList.Sort((f1, f2) => f1.Name.CompareTo(f2.Name));
+                    brineList.Sort((f1, f2) => f1.Name.CompareTo(f2.Name));
                 }
                 else
                 {
@@ -89,15 +86,12 @@
                 logger.LogError(ex, "Impossible to load Drilling Fluid Description from client");
             }
         }
-
+        
         await InvokeAsync(() => { StateHasChanged(); });
     }
-    protected override void OnParametersSet()
-    {
-        showAddPanel = false;
-    }
-    private Func<BaseOil, bool>
-    _baseOilFilter => x =>
+
+    private Func<Brine, bool>
+    _brineFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
@@ -106,33 +100,36 @@
 
         return false;
     };
-    void SelectedItemsChanged(HashSet<BaseOil>items)
+    void SelectedItemsChanged(HashSet<Brine>items)
     {
-        selectedBaseOilList.Clear();
-        selectedBaseOilList.InsertRange(0, items);
+        selectedBrineList.Clear();
+        selectedBrineList.InsertRange(0, items);
     }
-    private async Task HandleBaseOilAddition()
+    private async Task HandleBrineAddition()
     {
         showAddPanel = false;
+        brineIdForEdit = null;
         await OnInitializedAsync();
     }
-    private void AddBaseOil()
+    private void AddBrine()
     {
         showAddPanel = true;
-        baseOilIdForEdit = null;
+        brineIdForEdit = null;
+        //showEditPanel = false;
     }
-    private void EditBaseOil(Guid id)
+    private void EditBrine(Guid id)
     {
-        baseOilIdForEdit = id;
+        brineIdForEdit = id;
+        //showEditPanel = true;
         showAddPanel = true;
     }
-    private async Task DeleteBaseOil(Guid id)
+    private async Task DeleteBrine(Guid id)
     {
         try
         {
             if (await ConfirmDeletion())
             {
-                await APIUtils.ClientDrillingFluid.DeleteBaseOilByIdAsync(id);
+                await Api.ClientDrillingFluid.DeleteBrineByIdAsync(id);
                 await OnInitializedAsync();
             }
         }
@@ -141,16 +138,16 @@
             logger.LogError(ex, "Impossible to delete DrillingFluid");
         }
     }
-    private async Task DeleteSelectedBaseOil()
+    private async Task DeleteSelectedBrine()
     {
         if (await ConfirmDeletion())
         {
-            foreach (BaseOil baseOil in selectedBaseOilList)
+            foreach (Brine brine in selectedBrineList)
             {
-                await APIUtils.ClientDrillingFluid.DeleteBaseOilByIdAsync(baseOil.MetaInfo.ID);
+                await Api.ClientDrillingFluid.DeleteBrineByIdAsync(brine.MetaInfo.ID);
                 await OnInitializedAsync();
             }
-            selectedBaseOilList.Clear();
+            selectedBrineList.Clear();
         }        
     }
     private async Task<bool> ConfirmDeletion()
@@ -175,7 +172,6 @@
     }
     async void OnClickCloseEditPanel() {
         showAddPanel = false;
-        baseOilIdForEdit = null;
         await InvokeAsync(() => { StateHasChanged(); });
     }
 

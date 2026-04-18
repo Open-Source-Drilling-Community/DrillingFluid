@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
 <MudPaper Elevation="2" Class="py-6" Style="@($"position: {DataUtils.FLOATING_POSITION}; background:{DataUtils.FLOATING_COLOUR_DEEP};")" >            
@@ -220,7 +221,7 @@
     {
         if (BaseOilId != null)
         {
-            baseOilInstance = await APIUtils.ClientDrillingFluid.GetBaseOilByIdAsync((Guid)BaseOilId);
+            baseOilInstance = await Api.ClientDrillingFluid.GetBaseOilByIdAsync((Guid)BaseOilId);
         }
     }
     private async Task AddBaseOilComponent()
@@ -229,7 +230,7 @@
         {
             baseOilInstance.MetaInfo = new MetaInfo{ID = Guid.NewGuid()};
             baseOilInstance.PVTParameters = pvtParameters;
-            await APIUtils.ClientDrillingFluid.PostBaseOilAsync(baseOilInstance);
+            await Api.ClientDrillingFluid.PostBaseOilAsync(baseOilInstance);
             logger.LogInformation("BaseOil component posted successfully");
             Snackbar.Add("BaseOil component posted successfully", Severity.Success);            
             await SendMessage();
@@ -245,7 +246,7 @@
         try
         {
             baseOilInstance.PVTParameters = pvtParameters;
-            await APIUtils.ClientDrillingFluid.PutBaseOilByIdAsync(baseOilInstance.MetaInfo.ID, baseOilInstance);
+            await Api.ClientDrillingFluid.PutBaseOilByIdAsync(baseOilInstance.MetaInfo.ID, baseOilInstance);
             logger.LogInformation("BaseOil component posted successfully");
             Snackbar.Add("BaseOil component posted successfully", Severity.Success);            
             await SendMessage();

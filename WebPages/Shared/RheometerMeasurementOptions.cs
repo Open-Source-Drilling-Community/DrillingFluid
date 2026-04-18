@@ -1,3 +1,5 @@
+namespace NORCE.Drilling.DrillingFluid.WebPages.Shared;
+
 public class RheometerMeasurementOptions
 {
     public bool showRPM { get; set; } = true;

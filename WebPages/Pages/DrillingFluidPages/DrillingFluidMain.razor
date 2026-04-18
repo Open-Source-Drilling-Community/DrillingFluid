@@ -1,9 +1,10 @@
-﻿@page "/DrillingFluid"
+@inject IDrillingFluidAPIUtils Api
+@page "/DrillingFluid"
 @inject ILogger<DrillingFluidMain> logger
 @inject ISnackbar Snackbar
 
-<MudUnitAndReferenceChoiceTag HttpHost=@APIUtils.HostNameUnitConversion
-                              HttpBasePath=@APIUtils.HostBasePathUnitConversion
+<MudUnitAndReferenceChoiceTag HttpHost=@Api.HostNameUnitConversion
+                              HttpBasePath=@Api.HostBasePathUnitConversion
                               HttpController="UnitSystem/"
                               UnitSystemName="@DataUtils.UnitAndReferenceParameters.UnitSystemName"
                               UnitSystemNameChanged="@DataUtils.UpdateUnitSystemName">
@@ -56,7 +57,7 @@
     private List<DrillingFluid> drillingFluidList = new();
     private List<DrillingFluid> selectedDrillingFluidList = new();
     private DrillingFluid? currentDrillingFluid;
-    private List<object?>? inputDataList = new(); // container used to pass input data to the DrillingFluidEdit razor component without specifying content types (required by µservice Template)
+    private List<object?>? inputDataList = new(); // container used to pass input data to the DrillingFluidEdit razor component without specifying content types (required by �service Template)
                                                   // DrillingFluidDescription related variables
     // UI related variables
     public bool isHiddenMainPanel;
@@ -75,8 +76,8 @@
             currentDrillingFluid = null;
 
             // Starting all loading tasks asynchronously
-            logger.LogInformation("Trying to load list of DrillingFluid from client: " + APIUtils.HostNameDrillingFluid);
-            var drillingFluidTask = APIUtils.ClientDrillingFluid.GetAllDrillingFluidAsync();
+            logger.LogInformation("Trying to load list of DrillingFluid from client: " + Api.HostNameDrillingFluid);
+            var drillingFluidTask = Api.ClientDrillingFluid.GetAllDrillingFluidAsync();
 
             List<Task> loadingTaskList = new List<Task> { drillingFluidTask };            
 
@@ -137,7 +138,7 @@
     {
         try
         {
-            currentDrillingFluid = await APIUtils.ClientDrillingFluid.GetDrillingFluidByIdAsync(id);
+            currentDrillingFluid = await Api.ClientDrillingFluid.GetDrillingFluidByIdAsync(id);
             if (currentDrillingFluid != null)
             {
                 isHiddenMainPanel = true;
@@ -162,7 +163,7 @@
         {
             try
             {
-                await APIUtils.ClientDrillingFluid.DeleteDrillingFluidByIdAsync(id);
+                await Api.ClientDrillingFluid.DeleteDrillingFluidByIdAsync(id);
                 await OnInitializedAsync();
             }
             catch (Exception ex)
@@ -179,7 +180,7 @@
             {
                 foreach (DrillingFluid drillingFluid in selectedDrillingFluidList)
                 {
-                    await APIUtils.ClientDrillingFluid.DeleteDrillingFluidByIdAsync(drillingFluid.MetaInfo.ID);
+                    await Api.ClientDrillingFluid.DeleteDrillingFluidByIdAsync(drillingFluid.MetaInfo.ID);
                 }
                 await OnInitializedAsync();
             }
@@ -252,3 +253,4 @@
         await OnInitializedAsync();
     }
 }
+

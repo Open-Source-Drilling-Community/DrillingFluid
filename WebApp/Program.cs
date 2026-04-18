@@ -1,9 +1,10 @@
 using MudBlazor;
 using MudBlazor.Services;
+using NORCE.Drilling.DrillingFluid.WebApp;
+using NORCE.Drilling.DrillingFluid.WebPages;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices(config =>
@@ -18,29 +19,29 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
+var webPagesConfiguration = new WebPagesHostConfiguration
+{
+    DrillingFluidHostURL = builder.Configuration["DrillingFluidHostURL"] ?? string.Empty,
+    DrillStringHostURL = builder.Configuration["DrillStringHostURL"] ?? string.Empty,
+    UnitConversionHostURL = builder.Configuration["UnitConversionHostURL"] ?? string.Empty
+};
+
+builder.Services.AddSingleton<IDrillingFluidWebPagesConfiguration>(webPagesConfiguration);
+builder.Services.AddSingleton<IDrillingFluidAPIUtils, DrillingFluidAPIUtils>();
+
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-// This needs to match with what is defined in "charts/<helm-chart-name>/templates/values.yaml ingress.Path
 app.UsePathBase("/DrillingFluid/webapp");
 
-if (!String.IsNullOrEmpty(builder.Configuration["DrillingFluidHostURL"]))
-    NORCE.Drilling.DrillingFluid.WebApp.Configuration.DrillingFluidHostURL = builder.Configuration["DrillingFluidHostURL"];
-if (!String.IsNullOrEmpty(builder.Configuration["UnitConversionHostURL"]))
-    NORCE.Drilling.DrillingFluid.WebApp.Configuration.UnitConversionHostURL = builder.Configuration["UnitConversionHostURL"];
-
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.MapBlazorHub();

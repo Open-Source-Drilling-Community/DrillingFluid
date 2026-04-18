@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @using RheologicalModelLib
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
@@ -280,8 +281,8 @@
     private async Task GetCompletedFluid()
     {   
         if (OrderID != null){
-            logger.LogInformation("Trying to load completed fluid from client: " + APIUtils.HttpClientDrillingFluid);
-            var drillingFluidOrderInstanceTask = APIUtils.ClientDrillingFluid.GetDrillingFluidOrderByIdAsync((Guid) OrderID);        
+            logger.LogInformation("Trying to load completed fluid from client: " + Api.HttpClientDrillingFluid);
+            var drillingFluidOrderInstanceTask = Api.ClientDrillingFluid.GetDrillingFluidOrderByIdAsync((Guid) OrderID);        
             List<Task> loadingTaskList = new List<Task> { drillingFluidOrderInstanceTask };
             Task finishedTask = await Task.WhenAny(loadingTaskList);
             if (finishedTask == drillingFluidOrderInstanceTask)

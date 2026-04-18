@@ -1,3 +1,4 @@
+@inject IDrillingFluidAPIUtils Api
 @inject ISnackbar Snackbar
 @inject ILogger<MudInputWithUnitAdornment> logger
 @if(ShowAddPanel){
@@ -61,7 +62,7 @@
             </MudToolBar>
         </MudPaper>        
     </MudPaper>
-    <DrillingFluidDescriptionAdd ShowAddPanel="@showFluidDescriptionPanel" OnMessageSent="@HandleDrillingFluidDescriptionAddition"/>
+    <DrillingFluidDescriptionAddSimplified ShowAddPanel="@showFluidDescriptionPanel" OnMessageSent="@HandleDrillingFluidDescriptionAddition"/>
 
 </div>
 }
@@ -104,8 +105,8 @@
         {
             // Show main panel          
             // Starting all loading tasks asynchronously
-            logger.LogInformation("Trying to load list of drilling fluid description from client: " + APIUtils.HttpClientDrillingFluid);
-            var drillingFluidDescriptionTask = APIUtils.ClientDrillingFluid.GetAllDrillingFluidDescriptionAsync();
+            logger.LogInformation("Trying to load list of drilling fluid description from client: " + Api.HttpClientDrillingFluid);
+            var drillingFluidDescriptionTask = Api.ClientDrillingFluid.GetAllDrillingFluidDescriptionAsync();
           
             List<Task> loadingTaskList = new List<Task> { drillingFluidDescriptionTask };
             // Awaiting tasks and retrieve results as they become available
@@ -153,7 +154,7 @@
     {   
         try
         {
-            MetaInfo metaInfo = new() { ID = Guid.NewGuid(), HttpHostName = APIUtils.HostNameDrillingFluid, HttpHostBasePath = APIUtils.HostBasePathDrillingFluid, HttpEndPoint = "DrillingFluid/" };
+            MetaInfo metaInfo = new() { ID = Guid.NewGuid(), HttpHostName = Api.HostNameDrillingFluid, HttpHostBasePath = Api.HostBasePathDrillingFluid, HttpEndPoint = "DrillingFluid/" };
             DateTimeOffset creationDate = DateTimeOffset.UtcNow;
             drillingFluidOrderInstance.MetaInfo = metaInfo;
             drillingFluidOrderInstance.CreationDate = creationDate;
@@ -161,7 +162,7 @@
             drillingFluidOrderInstance.DrillingFluidDescription = selectedDrillingFluidDescription;
             drillingFluidOrderInstance.DrillingFluidDescriptionID = selectedDrillingFluidDescription.MetaInfo.ID;
                       
-            await APIUtils.ClientDrillingFluid.PostDrillingFluidOrderAsync(drillingFluidOrderInstance);
+            await Api.ClientDrillingFluid.PostDrillingFluidOrderAsync(drillingFluidOrderInstance);
             logger.LogInformation("DrillingFluid posted successfully");
             Snackbar.Add("DrillingFluid posted successfully", Severity.Success);
             ShowAddPanel = false;
