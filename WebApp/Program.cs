@@ -32,7 +32,8 @@ builder.Services.AddSingleton<IDrillingFluidAPIUtils, DrillingFluidAPIUtils>();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-app.UsePathBase("/DrillingFluid/webapp");
+var basePath = "/drillingfluid/webapp";
+app.UsePathBase(basePath);
 
 if (!app.Environment.IsDevelopment())
 {
@@ -48,3 +49,4 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
