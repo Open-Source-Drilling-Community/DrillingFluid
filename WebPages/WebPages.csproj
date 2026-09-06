@@ -16,15 +16,16 @@
     <RepositoryUrl>https://github.com/Open-Source-Drilling-Community/DrillingFluid</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MudBlazor" Version="8.14.0" />
-    <PackageReference Include="OSDC.DotnetLibraries.Drilling.WebAppUtils" Version="1.1.0" />
-    <PackageReference Include="OSDC.UnitConversion.Conversion" Version="3.3.25" />
-    <PackageReference Include="OSDC.UnitConversion.Conversion.UnitSystem" Version="3.3.27" />
+    <PackageReference Include="MudBlazor" Version="9.9.0" />
+    <PackageReference Include="OSDC.DotnetLibraries.Drilling.WebAppUtils" Version="1.1.5" />
+    <PackageReference Include="OSDC.UnitConversion.Conversion" Version="3.4.1" />
+    <PackageReference Include="OSDC.UnitConversion.Conversion.UnitSystem" Version="3.4.1" />
     <PackageReference Include="OSDC.DotnetLibraries.Drilling.DrillingProperties" Version="10.2.2-build.98" />
-    <PackageReference Include="OSDC.UnitConversion.DrillingRazorMudComponents" Version="3.3.47" />
+    <PackageReference Include="OSDC.UnitConversion.DrillingRazorMudComponents" Version="3.4.2" />
     <PackageReference Include="Plotly.Blazor" Version="6.0.2" />
   </ItemGroup>
 
