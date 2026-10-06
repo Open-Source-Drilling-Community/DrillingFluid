@@ -81,3 +81,7 @@ The current work has been funded by the [Research Council of Norway](https://www
 **Andrew Holsaeter**, *NORCE Energy Modelling and Automation*
 
 **Lucas Volpi**, *NORCE Energy Modelling and Automation*
+
+## Persisted calculation-case lifecycle
+
+`DrillingFluidOrder` is a persisted, immediately evaluated calculation case. OpenAPI binds the case, its caller-supplied fluid input, its server-derived completion result, and the GET/POST/PUT operations to `OSDC.DotnetLibraries.Drilling.SemanticCatalogue` 0.15.0. POST and PUT complete the calculation before their responses; no progress projection or result paging is exposed.

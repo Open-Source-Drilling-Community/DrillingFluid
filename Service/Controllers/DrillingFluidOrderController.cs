@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OSDC.DotnetLibraries.General.DataManagement;
 using NORCE.Drilling.DrillingFluid.Service.Managers;
+using OSDC.DotnetLibraries.Drilling.SemanticCatalogue;
 
 namespace NORCE.Drilling.DrillingFluid.Service.Controllers
 {
@@ -27,6 +28,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// </summary>
         /// <returns>the list of Guid of all DrillingFluidOrder present in the microservice database at endpoint DrillingFluidOrder/api/DrillingFluidOrder</returns>
         [HttpGet(Name = "GetAllDrillingFluidOrderId")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.CalculationCaseRetrieval)]
         public ActionResult<IEnumerable<Guid>> GetAllDrillingFluidOrderId()
         {
             var ids = _drillingFluidOrderManager.GetAllDrillingFluidOrderId();
@@ -45,6 +47,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// </summary>
         /// <returns>the list of MetaInfo of all DrillingFluidOrder present in the microservice database, at endpoint DrillingFluidOrder/api/DrillingFluidOrder/MetaInfo</returns>
         [HttpGet("MetaInfo", Name = "GetAllDrillingFluidOrderMetaInfo")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.CalculationCaseRetrieval)]
         public ActionResult<IEnumerable<MetaInfo>> GetAllDrillingFluidOrderMetaInfo()
         {
             var vals = _drillingFluidOrderManager.GetAllDrillingFluidOrderMetaInfo();
@@ -64,6 +67,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// <param name="guid"></param>
         /// <returns>the DrillingFluidOrder identified by its Guid from the microservice database, at endpoint DrillingFluidOrder/api/DrillingFluidOrder/MetaInfo/id</returns>
         [HttpGet("{id}", Name = "GetDrillingFluidOrderById")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.CalculationCaseRetrieval)]
         public ActionResult<Model.DrillingFluidOrder?> GetDrillingFluidOrderById(Guid id)
         {
             if (!id.Equals(Guid.Empty))
@@ -89,6 +93,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// </summary>
         /// <returns>the list of all DrillingFluidOrder present in the microservice database, at endpoint DrillingFluidOrder/api/DrillingFluidOrder/HeavyData</returns>
         [HttpGet("HeavyData", Name = "GetAllDrillingFluidOrder")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.CalculationCaseRetrieval)]
         public ActionResult<IEnumerable<Model.DrillingFluidOrder?>> GetAllDrillingFluidOrder()
         {
             var vals = _drillingFluidOrderManager.GetAllDrillingFluidOrder();
@@ -108,6 +113,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// <param name="drillingFluidOrder"></param>
         /// <returns>true if the given DrillingFluidOrder has been added successfully to the microservice database, at the endpoint DrillingFluidOrder/api/DrillingFluidOrder</returns>
         [HttpPost(Name = "PostDrillingFluidOrder")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.ImmediateCalculationSubmission)]
         public ActionResult PostDrillingFluidOrder([FromBody] Model.DrillingFluidOrder? data)
         {
             // Check if drillingFluidOrder exists in the database through ID
@@ -146,6 +152,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// <param name="drillingFluidOrder"></param>
         /// <returns>true if the given DrillingFluidOrder has been updated successfully to the microservice database, at the endpoint DrillingFluidOrder/api/DrillingFluidOrder/id</returns>
         [HttpPut("{id}", Name = "PutDrillingFluidOrderById")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.ImmediateCalculationReplacement)]
         public ActionResult PutDrillingFluidOrderById(Guid id, [FromBody] Model.DrillingFluidOrder? data)
         {
             // Check if DrillingFluidOrder is in the data base

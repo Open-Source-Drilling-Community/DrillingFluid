@@ -4,9 +4,11 @@ using OSDC.DotnetLibraries.General.DataManagement;
 using System;
 using System.Collections.Generic;
 using NORCE.Drilling.DrillingFluid.ParticleSwarmOptimization;
+using OSDC.DotnetLibraries.Drilling.SemanticCatalogue;
 
 namespace NORCE.Drilling.DrillingFluid.Model
 {
+    [Semantic(Concepts.CalculationCase)]
     public class DrillingFluidOrder
     {
         /// <summary>
@@ -36,6 +38,7 @@ namespace NORCE.Drilling.DrillingFluid.Model
         /// <summary>
         /// the ID of the fluid description used
         /// </summary>
+        [Semantic(Concepts.CalculationSpecification, Role = Concepts.CalculationInput)]
         public Guid DrillingFluidDescriptionID { get; set; }
         
         public DrillingFluidDescription? DrillingFluidDescription { get; set; }
@@ -52,7 +55,9 @@ namespace NORCE.Drilling.DrillingFluid.Model
             NumberOfParticles = 100
         };
         
+        [Semantic(Concepts.CalculationResult, Role = Concepts.ServerDerivedCalculationResult)]
         public CompletedDrillingFluid? CompletedDrillingFluid { get; set; }
+        [Semantic(Concepts.CalculationResult, Role = Concepts.ServerDerivedCalculationResult)]
         public double? OutputParam { get; set; }
 
         /// <summary>
