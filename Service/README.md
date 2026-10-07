@@ -44,4 +44,4 @@ The current work has been funded by the [Research Council of Norway](https://www
 
 ## Calculation lifecycle semantics
 
-The generated OpenAPI contract emits `x-osdc-semantic` metadata from SemanticCatalogue 0.15.0 for `DrillingFluidOrder`. Retrieval is identified as calculation-case retrieval, POST as immediate submission, PUT as immediate replacement, input as caller-supplied calculation input, and completion data as a server-derived result.
+The generated OpenAPI contract emits `x-osdc-semantic` metadata from SemanticCatalogue 0.16.0 for `DrillingFluidOrder`. Retrieval is identified as calculation-case retrieval, POST as immediate submission, PUT as immediate replacement, DELETE as calculation-case deletion, input as caller-supplied calculation input, and completion data as a server-derived result.

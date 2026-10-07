@@ -189,6 +189,7 @@ namespace NORCE.Drilling.DrillingFluid.Service.Controllers
         /// <param name="guid"></param>
         /// <returns>true if the DrillingFluidOrder was deleted from the microservice database, at the endpoint DrillingFluidOrder/api/DrillingFluidOrder/id</returns>
         [HttpDelete("{id}", Name = "DeleteDrillingFluidOrderById")]
+        [Semantic(Concepts.CalculationCase, Role = Concepts.CalculationCaseDeletion)]
         public ActionResult DeleteDrillingFluidOrderById(Guid id)
         {
             if (_drillingFluidOrderManager.GetDrillingFluidOrderById(id) != null)
